@@ -23,11 +23,15 @@
 # define SOCI_ODBC_DECL
 #endif
 
+#if defined(__CODEGEARC__)
+#pragma comment(lib, "odbc32.lib")
+#endif
+
 #include "soci/soci-platform.h"
 #include <vector>
 #include <soci/soci-backend.h>
 #include <sstream>
-#if defined(_MSC_VER) || defined(__MINGW32__)
+#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__CODEGEARC__)
 #include <windows.h>
 #endif
 #include <sqlext.h> // ODBC
