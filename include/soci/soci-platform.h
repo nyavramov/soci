@@ -51,7 +51,7 @@
 #define snprintf _snprintf
 
 // Define if you have the strtoll and strtoull variants.
-#if _MSC_VER < 1300
+#if _MSC_VER < 1300 && !defined(__CODEGEARC__)
 # error "Visual C++ versions prior 1300 don't support _strtoi64 and _strtoui64"
 #elif _MSC_VER >= 1300 && _MSC_VER < 1800
 namespace std {
