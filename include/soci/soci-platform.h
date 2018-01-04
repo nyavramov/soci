@@ -21,7 +21,11 @@
 #include <ctime>
 #include <memory>
 
-#include "soci/soci-config.h" // for SOCI_HAVE_CXX_C11
+#if !defined(__CODEGEARC__)
+	#include "soci/soci-config.h" // for SOCI_HAVE_CXX_C11
+#else
+	#include "soci-config.h"
+#endif
 
 #if defined(_MSC_VER)
 #define LL_FMT_FLAGS "I64"
@@ -30,7 +34,7 @@
 #endif
 
 // Portability hacks for Microsoft Visual C++ compiler
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__CODEGEARC__)
 #include <stdlib.h>
 
 //Disables warnings about STL objects need to have dll-interface and/or
@@ -108,8 +112,8 @@ namespace cxx_details
 {
 
 #if defined(SOCI_HAVE_CXX_C11) || (defined(_MSC_VER) && _MSC_VER >= 1800)
-    template <typename T>
-    using auto_ptr = std::unique_ptr<T>;
+	template <typename T>
+	using auto_ptr = std::unique_ptr<T>;
 #else // std::unique_ptr<> not available
     using std::auto_ptr;
 #endif
@@ -119,15 +123,15 @@ namespace cxx_details
 } // namespace soci
 
 #if defined(SOCI_HAVE_CXX_C11) || (defined(_MSC_VER) && _MSC_VER >= 1800)
-    #define SOCI_NOT_ASSIGNABLE(classname) \
-        classname& operator=(const classname&) = delete;
-    #define SOCI_NOT_COPYABLE(classname) \
-        classname(const classname&) = delete; \
+	#define SOCI_NOT_ASSIGNABLE(classname) \
+		classname& operator=(const classname&) = delete;
+	#define SOCI_NOT_COPYABLE(classname) \
+		classname(const classname&) = delete; \
         SOCI_NOT_ASSIGNABLE(classname)
 #else // no C++11 deleted members support
     #define SOCI_NOT_ASSIGNABLE(classname) \
-        classname& operator=(const classname&);
-    #define SOCI_NOT_COPYABLE(classname) \
+		classname& operator=(const classname&);
+	#define SOCI_NOT_COPYABLE(classname) \
         classname(const classname&); \
         SOCI_NOT_ASSIGNABLE(classname)
 #endif // C++11 deleted members available
@@ -137,7 +141,7 @@ namespace cxx_details
 #if defined(SOCI_HAVE_CXX_C11) || (defined(_MSC_VER) && _MSC_VER >= 1900)
     #define SOCI_NOEXCEPT_FALSE noexcept(false)
 #else
-    #define SOCI_NOEXCEPT_FALSE
+	#define SOCI_NOEXCEPT_FALSE
 #endif
 
 #endif // SOCI_PLATFORM_H_INCLUDED
